@@ -3,22 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-commerce Review Sentiment & Topic Analyzer</title>
+  <title>Sentix AI — Intelligent E-Commerce Review & Topic Intelligence</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h2>E-commerce Review Analyzer</h2>
-    <p>விமர்சனத்தை உள்ளிட்டு அதன் உணர்வு மற்றும் தலைப்பை அறிந்துகொள்ளுங்கள்.</p>
 
-    <textarea id="reviewInput" placeholder="Enter product review here... (e.g., Delivery was very delayed and packaging was torn)"></textarea>
-    <button onclick="analyzeReview()">Analyze Review</button>
+  <!-- Background Glowing Orbs -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
 
-    <div id="result" class="result-box hidden">
-      <h3>Analysis Result</h3>
-      <p><strong>Sentiment:</strong> <span id="sentimentText"></span></p>
-      <p><strong>Confidence:</strong> <span id="confidenceText"></span></p>
-      <p><strong>Associated Topic Keywords:</strong> <span id="keywordsText"></span></p>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="brand-logo">
+        <i class="fa-solid fa-brain-circuit"></i>
+      </div>
+      <span>Sentix<strong>AI</strong></span>
+    </div>
+    <div class="nav-actions">
+      <div id="userBadge" class="user-badge hidden">
+        <i class="fa-solid fa-circle-user"></i>
+        <span id="userNameDisplay">User</span>
+        <button onclick="logout()" class="btn-logout" title="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+      <button id="authBtn" onclick="openModal()" class="btn-primary-nav">
+        <i class="fa-solid fa-lock"></i> Sign In
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+    <!-- Hero Banner -->
+    <header class="hero-section">
+      <div class="badge-pill">
+        <span class="pulse-dot"></span> Next-Gen NLP Intelligence
+      </div>
+      <h1>E-Commerce Review & Sentiment Insights</h1>
+      <p>விமர்சனங்களின் ஆழமான உணர்வுகளை (Sentiment) மற்றும் முக்கிய விவாதப் புள்ளிகளை (Topic Modeling) AI மூலம் சில நொடிகளில் கண்டறியுங்கள்.</p>
+    </header>
+
+    <!-- App Card -->
+    <div class="analyzer-card">
+      <div class="input-header">
+        <label for="reviewInput"><i class="fa-solid fa-pen-nib"></i> Product Review</label>
+        <span class="char-count" id="charCount">0 characters</span>
+      </div>
+
+      <textarea id="reviewInput" placeholder="Paste an Amazon/Flipkart review here... (e.g. The build quality feels metallic and durable, but shipping took 12 days and the outer box was crushed.)" oninput="updateCharCount()"></textarea>
+
+      <!-- Quick Samples -->
+      <div class="quick-tags">
+        <span>Try sample:</span>
+        <button type="button" onclick="fillSample(1)">Positive Tech Review</button>
+        <button type="button" onclick="fillSample(2)">Negative Delivery Issue</button>
+        <button type="button" onclick="fillSample(3)">Customer Support</button>
+      </div>
+
+      <button id="analyzeBtn" class="btn-analyze" onclick="analyzeReview()">
+        <span id="btnText"><i class="fa-solid fa-bolt"></i> Analyze with Sentix AI</span>
+        <div id="btnSpinner" class="spinner hidden"></div>
+      </button>
+
+      <!-- Results View -->
+      <div id="resultBox" class="result-box hidden">
+        <div class="result-header">
+          <h3><i class="fa-solid fa-chart-pie"></i> NLP Analysis Breakdown</h3>
+          <span id="sentimentPill" class="sentiment-pill">Positive</span>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Predicted Sentiment</span>
+            <h4 id="sentimentVal">-</h4>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Model Confidence</span>
+            <h4 id="confidenceVal">-</h4>
+            <div class="progress-bar">
+              <div id="confidenceBar" class="progress-fill"></div>
+            </div>
+          </div>
+          <div class="metric-card full-width">
+            <span class="metric-label">Topic Cluster Keywords (LDA)</span>
+            <div id="keywordsList" class="keywords-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Login / Signup Modal -->
+  <div id="loginModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-header">
+        <div class="brand-logo sm">
+          <i class="fa-solid fa-brain-circuit"></i>
+        </div>
+        <h2>Welcome to SentixAI</h2>
+        <p>Sign in to save your history & unlock analytics</p>
+      </div>
+
+      <form onsubmit="handleAuth(event)" class="auth-form">
+        <div class="form-group">
+          <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+          <input type="email" id="authEmail" placeholder="you@domain.com" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-key"></i> Password</label>
+          <input type="password" id="authPass" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-submit-auth">
+          <span>Continue</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
   </div>
 
