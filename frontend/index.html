@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Review Sentiment & Topic Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>E-commerce Review Analyzer</h2>
+    <p>விமர்சனத்தை உள்ளிட்டு அதன் உணர்வு மற்றும் தலைப்பை அறிந்துகொள்ளுங்கள்.</p>
+
+    <textarea id="reviewInput" placeholder="Enter product review here... (e.g., Delivery was very delayed and packaging was torn)"></textarea>
+    <button onclick="analyzeReview()">Analyze Review</button>
+
+    <div id="result" class="result-box hidden">
+      <h3>Analysis Result</h3>
+      <p><strong>Sentiment:</strong> <span id="sentimentText"></span></p>
+      <p><strong>Confidence:</strong> <span id="confidenceText"></span></p>
+      <p><strong>Associated Topic Keywords:</strong> <span id="keywordsText"></span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
