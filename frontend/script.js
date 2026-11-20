@@ -1,5 +1,9 @@
 // Render-ல் உள்ள உங்கள் Backend URL-ஐ இங்கு உள்ளிடவும்
-const API_URL = "https://sentiment-analysis-api-heky.onrender.com/analyze";
+const API_BASE =
+  location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:"
+    ? "http://localhost:8000"
+    : "https://sentiment-analysis-api-heky.onrender.com";
+const API_URL = `${API_BASE}/predict`;
 
 // 1. Auth & Session Management (Local Persistence)
 window.addEventListener("DOMContentLoaded", () => {

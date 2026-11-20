@@ -30,6 +30,7 @@ def home():
 
 
 @app.post("/predict")
+@app.post("/analyze")  # பழைய frontend-க்கான alias
 def predict_sentiment_and_topic(review: ReviewInput):
     # 1. Sentiment கணிப்பு
     prediction = sentiment_model.predict([review.text])[0]
